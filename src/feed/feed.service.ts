@@ -81,7 +81,7 @@ export class FeedService {
   async updateFeed(feed: Feed): Promise<void> {
     const rssFeed = await this.parser.parseURL(feed.url);
 
-    rssFeed.items.forEach(async (item) => {
+    for (const item of rssFeed.items) {
       if (
         feed.lastItemAt == null ||
         (feed.lastItemAt != null && feed.lastItemAt.toString() < item.isoDate)
@@ -95,9 +95,9 @@ export class FeedService {
           feedId: feed.id,
         });
       }
-    });
+    }
 
-    feed.update({
+    await feed.update({
       lastItemAt: (await this.findLatestFeedItem(feed.id)).pubDate,
     });
   }
